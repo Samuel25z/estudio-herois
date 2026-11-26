@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {"name": "api", "runtimeExecutable": "npx", "runtimeArgs": ["wrangler", "dev", "--port", "8787", "--cwd", "api"], "port": 8787},
+    {"name": "site", "runtimeExecutable": "node", "runtimeArgs": ["scripts/servir-site.mjs"], "port": 5500}
+  ]
+}

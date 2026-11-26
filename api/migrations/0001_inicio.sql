@@ -1,0 +1,43 @@
+CREATE TABLE acessos (
+  quem TEXT PRIMARY KEY,
+  sal TEXT NOT NULL,
+  hash TEXT NOT NULL,
+  falhas INTEGER NOT NULL DEFAULT 0,
+  bloqueado_ate INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE sessoes (
+  token_hash TEXT PRIMARY KEY,
+  quem TEXT NOT NULL,
+  expira INTEGER NOT NULL
+);
+CREATE TABLE episodios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  numero INTEGER NOT NULL UNIQUE,
+  titulo TEXT NOT NULL,
+  criado INTEGER NOT NULL
+);
+CREATE TABLE falas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  episodio_id INTEGER NOT NULL REFERENCES episodios(id) ON DELETE CASCADE,
+  ordem INTEGER NOT NULL,
+  cod TEXT NOT NULL,
+  quem TEXT NOT NULL,
+  texto TEXT NOT NULL,
+  emocao TEXT NOT NULL DEFAULT '',
+  dur_ideal REAL,
+  status TEXT NOT NULL DEFAULT 'pendente',
+  recado TEXT NOT NULL DEFAULT '',
+  UNIQUE (episodio_id, cod)
+);
+CREATE TABLE tomadas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fala_id INTEGER NOT NULL REFERENCES falas(id) ON DELETE CASCADE,
+  chave TEXT NOT NULL,
+  duracao REAL NOT NULL,
+  pico REAL NOT NULL DEFAULT 0,
+  bytes INTEGER NOT NULL,
+  preferida INTEGER NOT NULL DEFAULT 0,
+  criado INTEGER NOT NULL
+);
+CREATE INDEX falas_ep ON falas (episodio_id, ordem);
+CREATE INDEX tomadas_fala ON tomadas (fala_id);

@@ -1,0 +1,11 @@
+node_modules/
+.wrangler/
+.env*
+!.env.example
+.dev.vars
+test-results/
+playwright-report/
+codigos-*.txt
+tests/voz-teste.wav
+api-dev.log
+site-dev.log

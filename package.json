@@ -1,0 +1,22 @@
+{
+  "name": "estudio-dos-herois",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "api": "cd api && wrangler dev --port 8787",
+    "site": "node scripts/servir-site.mjs",
+    "migrar": "cd api && wrangler d1 migrations apply estudio-herois --local",
+    "codigos": "node scripts/gerar-codigos.mjs",
+    "teste": "node tests/api.test.mjs && playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "wrangler": "^3.114.17"
+  },
+  "private": true
+}
