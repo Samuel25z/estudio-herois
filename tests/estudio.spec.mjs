@@ -3,8 +3,8 @@
 import {test, expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 
-const COD = Object.fromEntries(readFileSync('codigos-local.txt', 'utf8').trim().split('\n').map((l) => l.trim().split(/\s+/)));
-const API = 'http://localhost:8787';
+const COD = Object.fromEntries(readFileSync(process.env.CODIGOS || 'codigos-local.txt', 'utf8').trim().split('\n').map((l) => l.trim().split(/\s+/)));
+const API = process.env.API || 'http://localhost:8787';
 const NUM = 90 + Math.floor(Math.random() * 9);
 
 async function entrar(page, quem) {
