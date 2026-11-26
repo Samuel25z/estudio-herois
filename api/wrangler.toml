@@ -8,9 +8,9 @@ ORIGENS = "https://samuel25z.github.io,http://localhost:5500,http://127.0.0.1:55
 [[d1_databases]]
 binding = "DB"
 database_name = "estudio-herois"
-database_id = "TROCAR_DEPOIS_DE_CRIAR"
+database_id = "3346e794-6e99-4972-a4d6-a9fb441183a1"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
 binding = "AUDIOS"
-id = "TROCAR_DEPOIS_DE_CRIAR"
+id = "d895047cc84f464983ba6141c8db82a2"
