@@ -8,7 +8,7 @@ const API = process.env.API || 'http://localhost:8787';
 const NUM = 90 + Math.floor(Math.random() * 9);
 
 async function entrar(page, quem) {
-	await page.goto('/');
+	await page.goto('./');
 	if (quem === 'mestre') await page.getByRole('button', {name: 'Entrar como mestre'}).click();
 	else await page.getByRole('button', {name: new RegExp('^\\S?\\s*' + quem, 'i')}).click();
 	await page.getByLabel('Digite o seu código').fill(COD[quem]);
@@ -28,7 +28,7 @@ test('fluxo completo: subir, gravar, analisar, revisar, baixar', async ({browser
 	m.on('pageerror', (e) => erros.push(e.message));
 
 	// código errado mostra erro na tela
-	await m.goto('/');
+	await m.goto('./');
 	await m.getByRole('button', {name: 'Entrar como mestre'}).click();
 	await m.getByLabel('Digite o seu código').fill('12345678');
 	await m.getByRole('button', {name: 'Entrar'}).click();
@@ -112,7 +112,7 @@ test('fluxo completo: subir, gravar, analisar, revisar, baixar', async ({browser
 });
 
 test('tela inicial mostra os 8 heróis e nada de botão morto', async ({page}) => {
-	await page.goto('/');
+	await page.goto('./');
 	for (const n of ['Goubetti', 'Erick', 'Samuel', 'Flowtz', 'Znoob', 'Caio', 'Moon', 'Milk']) await expect(page.getByRole('button', {name: new RegExp(n)})).toBeVisible();
 	await page.getByRole('button', {name: /Caio/}).click();
 	await expect(page.getByRole('heading', {name: 'Caio'})).toBeVisible();
