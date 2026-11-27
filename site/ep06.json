@@ -12,9 +12,9 @@
   {
    "id": "1-02",
    "quem": "viih",
-   "texto": "...aí faz três semanas que eu não limpo o ouvido. Tô juntando a cera pra fazer uma vela. Já dá pra acender.",
-   "emocao": "Contando como drama, orgulhosa da vela",
-   "dur": 6.0,
+   "texto": "Minha periquita tá cheia de gosma verde.",
+   "emocao": "Do nada, tranquila, como quem fala do tempo",
+   "dur": 2.4,
    "antes": "Narrador: Agora com nove heróis, a trupe estava mais unida do que nunca."
   },
   {
@@ -148,10 +148,74 @@
   {
    "id": "1-21",
    "quem": "samuel",
-   "texto": "Gente, o mapa acendeu. A Coroa Sem Nome tá perto.",
-   "emocao": "Sério, decidido",
-   "dur": 3.0,
+   "texto": "Gente, nossos braços estão brilhando. Vamos se encaixar um no outro.",
+   "emocao": "Sério, sem perceber o duplo sentido",
+   "dur": 3.4,
    "antes": "Milk: Tá escrito: Caio, aceita-se troca."
+  },
+  {
+   "id": "1-21a",
+   "quem": "caio",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "flowtz",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "goubetti",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "moon",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "milk",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "znoob",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21a",
+   "quem": "erick",
+   "texto": "Ixiiiiiiiiii!",
+   "emocao": "Ixi comprido e malicioso (todos falam juntos)",
+   "dur": 1.6,
+   "antes": "Samuel: Gente, nossos braços estão brilhando. Vamos se encaixar um no outro."
+  },
+  {
+   "id": "1-21b",
+   "quem": "moon",
+   "texto": "Que papo de encaixar, mano?",
+   "emocao": "Rindo, zoando",
+   "dur": 1.8,
+   "antes": "Todos: Ixiiiiiiiiii!"
   },
   {
    "id": "1-22",
@@ -388,18 +452,18 @@
   {
    "id": "2-16",
    "quem": "viih",
-   "texto": "Uma vez eu espremi um cravo nas costas do meu tio... e saiu tanto pus que espirrou no teto. Tá lá até hoje, amarelinho. A gente chama de lustre.",
+   "texto": "Um dia eu enfiei um pepino tão grande no meu cu... que quando eu sentei, ele destruiu meu rabo inteiro. E eu tive que cagar um toletão de bosta pro pepino sair fora.",
    "emocao": "Contando como tragédia, com carinho no fim",
-   "dur": 7.5,
+   "dur": 9.0,
    "antes": "Viih: Deixa comigo."
   },
   {
    "id": "2-18",
    "quem": "viih",
-   "texto": "E aí o cravo tinha um cravinho dentro...",
-   "emocao": "Empolgada, continuando",
-   "dur": 2.4,
-   "antes": "Viih: Uma vez eu espremi um cravo nas costas do meu tio... e saiu tanto pus que espirrou no teto. Tá lá até hoje, amarelinho. A gente chama de lustre."
+   "texto": "Espera! Nem contei a melhor parte: depois eu lavei e fiz salada com ele!",
+   "emocao": "Gritando empolgada pros guardas que fogem",
+   "dur": 3.2,
+   "antes": "Viih: Um dia eu enfiei um pepino tão grande no meu cu... que quando eu sentei, ele destruiu meu rabo inteiro. E eu tive que cagar um toletão de bosta pro pepino sair fora."
   },
   {
    "id": "2-20",
@@ -428,7 +492,7 @@
   {
    "id": "2-23",
    "quem": "viih",
-   "texto": "CAPITÃO, ESPERA! VOCÊ NÃO OUVIU O FINAL DO CRAVINHO!",
+   "texto": "CAPITÃO, ESPERA! VOCÊ NÃO OUVIU O FINAL DO PEPINO!",
    "emocao": "Gritando, correndo atrás dele",
    "dur": 2.8,
    "antes": "Viih: Vocês me curaram... me deram um propósito. Agora eu vou seguir o meu coração."
