@@ -1,7 +1,7 @@
 // API do Estúdio dos Heróis (Cloudflare Worker + D1 para os dados + KV para os áudios).
 import {hashCodigo, sha256, aleatorioHex, iguais} from './senha.js';
 
-export const PROTAGONISTAS = ['goubetti', 'erick', 'samuel', 'flowtz', 'znoob', 'caio', 'moon', 'milk'];
+export const PROTAGONISTAS = ['goubetti', 'erick', 'samuel', 'flowtz', 'znoob', 'caio', 'moon', 'milk', 'viih'];
 const MESTRE = 'mestre';
 const MAX_TOMADAS = 3;
 const MAX_BYTES = 12 * 1024 * 1024; // ~2 min de WAV 48 kHz mono

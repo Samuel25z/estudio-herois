@@ -47,7 +47,7 @@ Campos opcionais que deixam o estúdio melhor:
 - `emocao`: a direção para o amigo ("bravo, explode feito criança"). Sem ele, o site usa o `jeito` sem o começo "Voz de jovem...".
 - `dur`: o tempo ideal da fala em segundos. Sem ele, o site estima pelo tamanho do texto.
 
-Só os 8 protagonistas gravam. O narrador e os figurantes aparecem apenas como contexto.
+Os 8 protagonistas e a Viih gravam. O narrador e os figurantes aparecem apenas como contexto.
 Subir de novo o mesmo episódio atualiza as falas. Se o texto de uma fala gravada mudar, ela volta para "refazer".
 
 ## Receita de crescimento

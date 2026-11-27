@@ -12,8 +12,9 @@ const HEROIS = {
 	caio: {nome: 'Caio', cor: '#b0552a'},
 	moon: {nome: 'Moon', cor: '#8f7420'},
 	milk: {nome: 'Milk', cor: '#4f7f7a'},
+	viih: {nome: 'Viih', cor: '#9c3f5a'},
 };
-const OUTROS = {narrador: 'Narrador', capitao: 'Capitão', guarda: 'Guarda', arvore: 'Árvore', sapo: 'Sapo', bruxa: 'Bruxa Vibradora', viih: 'Viih'};
+const OUTROS = {narrador: 'Narrador', capitao: 'Capitão', guarda: 'Guarda', arvore: 'Árvore', sapo: 'Sapo', bruxa: 'Bruxa Vibradora'};
 const nomeDe = (q) => HEROIS[q]?.nome || OUTROS[q] || (q ? q[0].toUpperCase() + q.slice(1) : '');
 const ESTADOS = {pendente: 'Falta gravar', gravada: 'Gravada', aprovada: 'Aprovada', refazer: 'Refazer'};
 
@@ -680,7 +681,7 @@ let AVULSAS = null;
 const carregaAvulsas = async () => {
 	if (AVULSAS) return AVULSAS;
 	try {
-		AVULSAS = await (await fetch('ep06.json?v=7', {cache: 'no-store'})).json();
+		AVULSAS = await (await fetch('ep06.json?v=8', {cache: 'no-store'})).json();
 	} catch {
 		AVULSAS = {falas: []};
 	}
