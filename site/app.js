@@ -254,7 +254,7 @@ async function telaFalas() {
 		}
 		const {falas} = await api(`/api/episodios/${ep.id}/falas`);
 		const feitas = falas.filter((f) => f.tomadas.length).length;
-		$app.innerHTML = topo + seletorEp(episodios, ep) +
+		$app.innerHTML = topo + avisoAvulsa(s.quem) + seletorEp(episodios, ep) +
 			(falas.length
 				? `<div class="progresso">${feitas} de ${falas.length} ${falas.length === 1 ? 'fala gravada' : 'falas gravadas'}<div class="barra"><i style="width:${(feitas / falas.length) * 100}%"></i></div></div>
 				<section id="lista">${falas.map(htmlFala).join('')}</section>`
@@ -676,6 +676,15 @@ function rota() {
 const AVULSAS = {
 	moon: {quem: 'moon', ep: 'Cap. 6, parte 3', antes: 'O grupo chega no topo do templo e vê a coroa brilhando no altar.', texto: 'Olha a coroa ali! Samuel, vai lá pegar!', emocao: 'Empolgada, apontando para a coroa, meio cochichando de emoção', dur: 2.4},
 };
+function avisoAvulsa(quem) {
+	const L = AVULSAS[quem];
+	if (!L) return '';
+	return `<a class="folha pendente" href="#/gravar/${quem}" style="display:block;text-decoration:none;color:inherit;margin-bottom:16px;box-shadow:inset 4px 0 0 #b3261e">
+		<div class="cab"><span>${esc(L.ep)}: fala nova</span><span class="estado refazer">Falta gravar</span></div>
+		<p class="texto">${esc(L.texto)}</p>
+		<p class="dica"><b>Toque aqui para gravar</b> e depois baixe o áudio para mandar ao Samuel.</p>
+	</a>`;
+}
 function telaAvulsa(id) {
 	const L = AVULSAS[id];
 	if (!L) return (location.hash = '#/');
