@@ -253,6 +253,7 @@ async function telaFalas() {
 			return ligarSair();
 		}
 		const {falas} = await api(`/api/episodios/${ep.id}/falas`);
+		await carregaAvulsas();
 		const feitas = falas.filter((f) => f.tomadas.length).length;
 		$app.innerHTML = topo + avisoAvulsa(s.quem) + seletorEp(episodios, ep) +
 			(falas.length
@@ -673,86 +674,117 @@ function rota() {
 }
 
 // ---------- gravação avulsa (sem login): grava, ouve e baixa o WAV para mandar direto ----------
-const AVULSAS = {
-	moon: {quem: 'moon', ep: 'Cap. 6, parte 3', antes: 'O grupo chega no topo do templo e vê a coroa brilhando no altar.', texto: 'Olha a coroa ali! Samuel, vai lá pegar!', emocao: 'Empolgada, apontando para a coroa, meio cochichando de emoção', dur: 2.4},
+// ---------- gravação rápida sem login: as falas novas de um capítulo (site/ep06.json) ----------
+// Cada amigo abre #/gravar/<quem>, grava as falas dele e baixa (uma por uma ou todas num zip) para mandar ao Samuel.
+let AVULSAS = null;
+const carregaAvulsas = async () => {
+	if (AVULSAS) return AVULSAS;
+	try {
+		AVULSAS = await (await fetch('ep06.json?v=5', {cache: 'no-store'})).json();
+	} catch {
+		AVULSAS = {falas: []};
+	}
+	return AVULSAS;
 };
 function avisoAvulsa(quem) {
-	const L = AVULSAS[quem];
-	if (!L) return '';
+	const L = AVULSAS?.falas.filter((f) => f.quem === quem) || [];
+	if (!L.length) return '';
 	return `<a class="folha pendente" href="#/gravar/${quem}" style="display:block;text-decoration:none;color:inherit;margin-bottom:16px;box-shadow:inset 4px 0 0 #b3261e">
-		<div class="cab"><span>${esc(L.ep)}: fala nova</span><span class="estado refazer">Falta gravar</span></div>
-		<p class="texto">${esc(L.texto)}</p>
-		<p class="dica"><b>Toque aqui para gravar</b> e depois baixe o áudio para mandar ao Samuel.</p>
+		<div class="cab"><span>${esc(AVULSAS.ep)}</span><span class="estado refazer">${L.length} ${L.length > 1 ? 'falas novas' : 'fala nova'}</span></div>
+		<p class="texto">${esc(L[0].texto)}${L.length > 1 ? ' …' : ''}</p>
+		<p class="dica"><b>Toque aqui para gravar</b> e depois baixe os áudios para mandar ao Samuel.</p>
 	</a>`;
 }
-function telaAvulsa(id) {
-	const L = AVULSAS[id];
-	if (!L) return (location.hash = '#/');
-	let wav = null, tocador = null;
-	const nomeArq = `cap06p3-04-${L.quem}.wav`;
-	$app.innerHTML = `<header class="topo">${selo(L.quem)}<h1>${esc(nomeDe(L.quem))}</h1></header>
-	<article class="folha pendente" id="avulsa">
-		<div class="cab"><span>${esc(L.ep)}</span><span class="estado pendente">Gravação rápida</span></div>
-		<p class="antes">${esc(L.antes)}</p>
-		<p class="texto">${esc(L.texto)}</p>
-		<p class="emocao">${IC.mascara}<span>${esc(L.emocao)}</span></p>
-		<p class="ideal">Tempo ideal: uns ${num(L.dur)} segundos</p>
-		<div class="gravar">
-			<button class="selo-rec" id="rec" aria-label="Gravar">${IC.mic}</button>
-			<div class="medidor"><span class="dica" id="dica">Toque para gravar</span></div>
-		</div>
-		<div id="pronto" hidden>
-			<div class="acoes" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
-				<button class="btn fino" id="ouvir">${IC.play} Ouvir</button>
-				<button class="btn ouro" id="baixar">${IC.baixar} Baixar o áudio</button>
-			</div>
-			<p class="dica" style="margin-top:10px">Gostou? Baixe e mande o arquivo para o Samuel no WhatsApp. Não gostou? Toque no microfone e grave de novo.</p>
-		</div>
-	</article>`;
-	const rec = document.getElementById('rec'), dica = document.getElementById('dica'), pronto = document.getElementById('pronto');
-	rec.onclick = async () => {
-		if (gravando) {
-			const g = gravando.g;
-			gravando = null;
-			rec.innerHTML = IC.mic;
-			const {amostras, sr} = await g.parar();
-			wav = paraWav(amostras, sr);
-			dica.textContent = `Gravado: ${num(amostras.length / sr)} s. Toque para gravar de novo`;
-			pronto.hidden = false;
-			return;
-		}
-		try {
-			const g = new Gravador((p, seg) => (dica.textContent = `Gravando… ${num(seg)} s ${'▮'.repeat(Math.min(12, Math.round(p * 14)))}`), () => rec.click());
-			await g.comecar();
-			gravando = {g};
-			rec.innerHTML = IC.stop;
-			pronto.hidden = true;
-		} catch (e) {
-			dica.textContent = e.message;
-		}
-	};
-	document.getElementById('ouvir').onclick = () => {
-		if (!wav) return;
-		tocador?.pause();
-		tocador = new Audio(URL.createObjectURL(wav));
-		tocador.play();
-	};
-	document.getElementById('baixar').onclick = async () => {
-		if (!wav) return;
-		const arq = new File([wav], nomeArq, {type: 'audio/wav'});
+async function telaAvulsa(quem) {
+	await carregaAvulsas();
+	const L = AVULSAS.falas.filter((f) => f.quem === quem);
+	if (!L.length) return (location.hash = '#/');
+	const wavs = {};
+	let tocador = null;
+	const nomeArq = (f) => `${AVULSAS.prefixo}-${f.id}-${f.quem}.wav`;
+	const baixar = async (blob, nome) => {
+		const arq = new File([blob], nome, {type: blob.type || 'application/octet-stream'});
 		if (navigator.canShare?.({files: [arq]})) {
 			try {
-				return await navigator.share({files: [arq], title: nomeArq});
+				return await navigator.share({files: [arq], title: nome});
 			} catch (e) {
 				if (e.name === 'AbortError') return;
 			}
 		}
 		const a = document.createElement('a');
-		a.href = URL.createObjectURL(wav);
-		a.download = nomeArq;
+		a.href = URL.createObjectURL(blob);
+		a.download = nome;
 		document.body.appendChild(a);
 		a.click();
 		a.remove();
+	};
+	$app.innerHTML = `<header class="topo">${selo(quem)}<h1>${esc(nomeDe(quem))}</h1></header>
+	<p class="dica" style="margin:0 0 14px">${esc(AVULSAS.ep)}: ${L.length} ${L.length > 1 ? 'falas' : 'fala'} para gravar. Grave todas e no fim toque em <b>Baixar todas</b> (não feche a página antes de baixar).</p>
+	${L.map((f, i) => `<article class="folha pendente" data-i="${i}">
+		<div class="cab"><span>Fala ${esc(f.id)}</span><span class="estado pendente" data-estado>Falta gravar</span></div>
+		${f.antes ? `<p class="antes">Antes: ${esc(f.antes)}</p>` : ''}
+		<p class="texto">${esc(f.texto)}</p>
+		<p class="emocao">${IC.mascara}<span>${esc(f.emocao)}</span></p>
+		<p class="ideal">Tempo ideal: uns ${num(f.dur)} segundos</p>
+		<div class="gravar">
+			<button class="selo-rec" data-rec aria-label="Gravar">${IC.mic}</button>
+			<div class="medidor"><span class="dica" data-dica>Toque para gravar</span></div>
+		</div>
+		<div data-pronto hidden>
+			<div class="acoes" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+				<button class="btn fino" data-ouvir>${IC.play} Ouvir</button>
+				<button class="btn fino" data-baixar>${IC.baixar} Baixar esta</button>
+			</div>
+		</div>
+	</article>`).join('')}
+	<div class="acoes" style="margin:18px 0 40px"><button class="btn ouro" id="todas" disabled>${IC.baixar} Baixar todas (0 de ${L.length})</button></div>`;
+	const btTodas = document.getElementById('todas');
+	const atualiza = () => {
+		const n = Object.keys(wavs).length;
+		btTodas.disabled = !n;
+		btTodas.innerHTML = `${IC.baixar} Baixar todas (${n} de ${L.length})`;
+	};
+	document.querySelectorAll('article[data-i]').forEach((art) => {
+		const f = L[Number(art.dataset.i)];
+		const rec = art.querySelector('[data-rec]'), dica = art.querySelector('[data-dica]'), pronto = art.querySelector('[data-pronto]'), est = art.querySelector('[data-estado]');
+		rec.onclick = async () => {
+			if (gravando) {
+				if (gravando.rec !== rec) return;
+				const g = gravando.g;
+				gravando = null;
+				rec.innerHTML = IC.mic;
+				const {amostras, sr} = await g.parar();
+				wavs[f.id] = paraWav(amostras, sr);
+				dica.textContent = `Gravado: ${num(amostras.length / sr)} s. Toque para gravar de novo`;
+				est.textContent = 'Gravada';
+				est.className = 'estado gravada';
+				pronto.hidden = false;
+				atualiza();
+				return;
+			}
+			try {
+				const g = new Gravador((p, seg) => (dica.textContent = `Gravando… ${num(seg)} s ${'▮'.repeat(Math.min(12, Math.round(p * 14)))}`), () => rec.click());
+				await g.comecar();
+				gravando = {g, rec};
+				rec.innerHTML = IC.stop;
+			} catch (e) {
+				dica.textContent = e.message;
+			}
+		};
+		art.querySelector('[data-ouvir]').onclick = () => {
+			if (!wavs[f.id]) return;
+			tocador?.pause();
+			tocador = new Audio(URL.createObjectURL(wavs[f.id]));
+			tocador.play();
+		};
+		art.querySelector('[data-baixar]').onclick = () => wavs[f.id] && baixar(wavs[f.id], nomeArq(f));
+	});
+	btTodas.onclick = async () => {
+		const arqs = [];
+		for (const f of L) if (wavs[f.id]) arqs.push({nome: nomeArq(f), dados: new Uint8Array(await wavs[f.id].arrayBuffer())});
+		if (!arqs.length) return;
+		if (arqs.length === 1) return baixar(wavs[L.find((f) => wavs[f.id]).id], arqs[0].nome);
+		await baixar(montarZip(arqs), `${AVULSAS.prefixo}-${quem}-vozes.zip`);
 	};
 }
 window.addEventListener('hashchange', rota);
