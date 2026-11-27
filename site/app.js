@@ -255,7 +255,7 @@ async function telaFalas() {
 		const {falas} = await api(`/api/episodios/${ep.id}/falas`);
 		await carregaAvulsas();
 		const feitas = falas.filter((f) => f.tomadas.length).length;
-		$app.innerHTML = topo + avisoAvulsa(s.quem) + seletorEp(episodios, ep) +
+		$app.innerHTML = topo + seletorEp(episodios, ep) +
 			(falas.length
 				? `<div class="progresso">${feitas} de ${falas.length} ${falas.length === 1 ? 'fala gravada' : 'falas gravadas'}<div class="barra"><i style="width:${(feitas / falas.length) * 100}%"></i></div></div>
 				<section id="lista">${falas.map(htmlFala).join('')}</section>`
