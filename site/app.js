@@ -681,7 +681,7 @@ let AVULSAS = null;
 const carregaAvulsas = async () => {
 	if (AVULSAS) return AVULSAS;
 	try {
-		AVULSAS = await (await fetch('ep06.json?v=8', {cache: 'no-store'})).json();
+		AVULSAS = await (await fetch('ep06.json?v=9', {cache: 'no-store'})).json();
 	} catch {
 		AVULSAS = {falas: []};
 	}

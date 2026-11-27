@@ -28,7 +28,7 @@
   {
    "id": "1-04",
    "quem": "goubetti",
-   "texto": "Dormindo ela é melhor. Pelo menos dormindo ela erra o nome do Jorge.",
+   "texto": "Dormindo ela é melhor. Pelo menos essa desgraça erra o nome do Jorge.",
    "emocao": "Calmo, zoando sem rir",
    "dur": 3.6,
    "antes": "Moon: Mano... ela não parou desde ontem, mano. Ela fala até dormindo, mano."
@@ -39,7 +39,7 @@
    "texto": "ALGUÉM ME EXPLICA POR QUE A UNHA TEM NOME?!",
    "emocao": "Gritando, indignado",
    "dur": 2.4,
-   "antes": "Goubetti: Dormindo ela é melhor. Pelo menos dormindo ela erra o nome do Jorge."
+   "antes": "Goubetti: Dormindo ela é melhor. Pelo menos essa desgraça erra o nome do Jorge."
   },
   {
    "id": "1-06",
@@ -548,7 +548,7 @@
   {
    "id": "2-32",
    "quem": "goubetti",
-   "texto": "Ninguém encosta em nada. Coroa brilhando em templo abandonado nunca é coisa boa.",
+   "texto": "Ninguém encosta em nada. Coroa brilhando em templo parece macumba do diabo.",
    "emocao": "Sensato",
    "dur": 4.0,
    "antes": "Milk: Parece um donut."
@@ -559,7 +559,7 @@
    "texto": "Põe no Caio. Se der merda, ninguém sente falta.",
    "emocao": "Debochado",
    "dur": 2.6,
-   "antes": "Goubetti: Ninguém encosta em nada. Coroa brilhando em templo abandonado nunca é coisa boa."
+   "antes": "Goubetti: Ninguém encosta em nada. Coroa brilhando em templo parece macumba do diabo."
   },
   {
    "id": "2-34",
