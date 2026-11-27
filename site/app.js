@@ -645,11 +645,87 @@ function rota() {
 	const h = location.hash.replace(/^#/, '').split('?')[0] || '/';
 	let m;
 	if ((m = h.match(/^\/entrar\/(\w+)$/))) return telaEntrar(m[1]);
+	if ((m = h.match(/^\/gravar\/(\w+)$/))) return telaAvulsa(m[1]);
 	if (h === '/falas') return telaFalas();
 	if (h === '/mestre') return telaMestre();
 	if (memoria?.quem === 'mestre') return (location.hash = '#/mestre');
 	if (memoria && HEROIS[memoria.quem]) return (location.hash = '#/falas');
 	telaInicio();
+}
+
+// ---------- gravação avulsa (sem login): grava, ouve e baixa o WAV para mandar direto ----------
+const AVULSAS = {
+	moon: {quem: 'moon', ep: 'Cap. 6, parte 3', antes: 'O grupo chega no topo do templo e vê a coroa brilhando no altar.', texto: 'Olha a coroa ali! Samuel, vai lá pegar!', emocao: 'Empolgada, apontando para a coroa, meio cochichando de emoção', dur: 2.4},
+};
+function telaAvulsa(id) {
+	const L = AVULSAS[id];
+	if (!L) return (location.hash = '#/');
+	let wav = null, tocador = null;
+	const nomeArq = `cap06p3-04-${L.quem}.wav`;
+	$app.innerHTML = `<header class="topo">${selo(L.quem)}<h1>${esc(nomeDe(L.quem))}</h1></header>
+	<article class="folha pendente" id="avulsa">
+		<div class="cab"><span>${esc(L.ep)}</span><span class="estado pendente">Gravação rápida</span></div>
+		<p class="antes">${esc(L.antes)}</p>
+		<p class="texto">${esc(L.texto)}</p>
+		<p class="emocao">${IC.mascara}<span>${esc(L.emocao)}</span></p>
+		<p class="ideal">Tempo ideal: uns ${num(L.dur)} segundos</p>
+		<div class="gravar">
+			<button class="selo-rec" id="rec" aria-label="Gravar">${IC.mic}</button>
+			<div class="medidor"><span class="dica" id="dica">Toque para gravar</span></div>
+		</div>
+		<div id="pronto" hidden>
+			<div class="acoes" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+				<button class="btn fino" id="ouvir">${IC.play} Ouvir</button>
+				<button class="btn ouro" id="baixar">${IC.baixar} Baixar o áudio</button>
+			</div>
+			<p class="dica" style="margin-top:10px">Gostou? Baixe e mande o arquivo para o Samuel no WhatsApp. Não gostou? Toque no microfone e grave de novo.</p>
+		</div>
+	</article>`;
+	const rec = document.getElementById('rec'), dica = document.getElementById('dica'), pronto = document.getElementById('pronto');
+	rec.onclick = async () => {
+		if (gravando) {
+			const g = gravando.g;
+			gravando = null;
+			rec.innerHTML = IC.mic;
+			const {amostras, sr} = await g.parar();
+			wav = paraWav(amostras, sr);
+			dica.textContent = `Gravado: ${num(amostras.length / sr)} s. Toque para gravar de novo`;
+			pronto.hidden = false;
+			return;
+		}
+		try {
+			const g = new Gravador((p, seg) => (dica.textContent = `Gravando… ${num(seg)} s ${'▮'.repeat(Math.min(12, Math.round(p * 14)))}`), () => rec.click());
+			await g.comecar();
+			gravando = {g};
+			rec.innerHTML = IC.stop;
+			pronto.hidden = true;
+		} catch (e) {
+			dica.textContent = e.message;
+		}
+	};
+	document.getElementById('ouvir').onclick = () => {
+		if (!wav) return;
+		tocador?.pause();
+		tocador = new Audio(URL.createObjectURL(wav));
+		tocador.play();
+	};
+	document.getElementById('baixar').onclick = async () => {
+		if (!wav) return;
+		const arq = new File([wav], nomeArq, {type: 'audio/wav'});
+		if (navigator.canShare?.({files: [arq]})) {
+			try {
+				return await navigator.share({files: [arq], title: nomeArq});
+			} catch (e) {
+				if (e.name === 'AbortError') return;
+			}
+		}
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(wav);
+		a.download = nomeArq;
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+	};
 }
 window.addEventListener('hashchange', rota);
 rota();
