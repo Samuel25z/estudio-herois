@@ -286,6 +286,7 @@ function htmlTomadas(f, dono) {
 			<button class="ico play" data-acao="ouvir" aria-label="Ouvir">${IC.play}</button>
 			<span class="rotulo">Versão ${i + 1} <small>${num(t.duracao)} s${t.preferida ? ', a preferida' : ''}</small></span>
 			<button class="ico" data-acao="analise" aria-label="Ver análise">${IC.analise}</button>
+			${dono ? `<button class="ico" data-acao="baixar" aria-label="Baixar o áudio">${IC.baixar}</button>` : ''}
 			${dono ? `<button class="ico fav" data-acao="fav" aria-pressed="${t.preferida ? 'true' : 'false'}" aria-label="Marcar como preferida">${IC.estrela}</button>
 			<button class="ico" data-acao="apagar" aria-label="Apagar esta versão">${IC.lixo}</button>` : `<span class="ico fav" aria-pressed="${t.preferida ? 'true' : 'false'}" title="${t.preferida ? 'Preferida' : ''}">${t.preferida ? IC.estrela : ''}</span>`}
 		</li>`
@@ -324,6 +325,24 @@ function ligarFala(f) {
 		const tid = Number(b.closest('[data-t]').dataset.t);
 		const t = f.tomadas.find((x) => x.id === tid);
 		if (b.dataset.acao === 'ouvir') tocar(b, () => audioDe(tid));
+		if (b.dataset.acao === 'baixar') {
+			const nome = `${f.cod || 'fala'}-versao${f.tomadas.indexOf(t) + 1}.wav`;
+			const blob = new Blob([await audioDe(tid)], {type: 'audio/wav'});
+			const arq = new File([blob], nome, {type: 'audio/wav'});
+			if (navigator.canShare?.({files: [arq]})) {
+				try {
+					return await navigator.share({files: [arq], title: nome});
+				} catch (e2) {
+					if (e2.name === 'AbortError') return;
+				}
+			}
+			const a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = nome;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
 		if (b.dataset.acao === 'analise') {
 			alvo.innerHTML = '<p class="dica">Medindo…</p>';
 			try {
